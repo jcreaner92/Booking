@@ -1,5 +1,6 @@
 package booking;
 import java.text.DecimalFormat;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -10,23 +11,53 @@ public class Flight
 {
    //Declare class variables
    private String destination;
-   private final String flightDay;
+   private String flightDay;
    private String flightTime;
    private double price;
    DecimalFormat df = new DecimalFormat("00.00");
 
    public Flight()
    {
+      boolean valid = false;
+      printDestinationMenu();
       Scanner scanner = new Scanner(System.in);
+      do
+      {
+         try
+         {
+            int destinationNum = scanner.nextInt();
+            setDestinationWithNumber(destinationNum);
 
-      System.out.println("Where would you like to fly?");
-      System.out.println("1. England");
-      System.out.println("2. France");
-      System.out.println("3. Germany");
-      System.out.println("4. Portugal");
-      System.out.println("5. Cyprus");
-      int destinationNum = scanner.nextInt();
+            System.out.println("Do you need a return?");
+            String returnFlight = scanner.next();
 
+            if (returnFlight.equalsIgnoreCase("Y"))
+            {
+               price = price * 2;
+            }
+            System.out.println("What date would you like to fly? (dd/mm/yyyy)");
+            this.flightDay = scanner.next();
+            valid = true;
+         } catch (InputMismatchException e)
+         {
+            System.out.println("Invalid input, please start again");
+            valid = false;
+         }
+      } while(!valid);
+   }
+
+   public String getDestination()
+   {
+      return destination;
+   }
+
+   public void setFlightDay(String flightDay)
+   {
+      this.flightDay = flightDay;
+   }
+
+   public void setDestinationWithNumber(int destinationNum)
+   {
       switch (destinationNum)
       {
          case 1 -> {
@@ -55,16 +86,15 @@ public class Flight
             flightTime = "10.00PM";
          }
       }
+   }
 
-      System.out.println("Do you need a return?");
-      String returnFlight = scanner.next();
-
-      if (returnFlight.equals("Y"))
-      {
-         price = price * 2;
-      }
-      System.out.println("What date would you like to fly? (dd/mm/yyyy)");
-      this.flightDay = scanner.next();
+   public void printDestinationMenu(){
+      System.out.println("Where would you like to fly?");
+      System.out.println("1. England");
+      System.out.println("2. France");
+      System.out.println("3. Germany");
+      System.out.println("4. Portugal");
+      System.out.println("5. Cyprus");
    }
 
    public String toString()
